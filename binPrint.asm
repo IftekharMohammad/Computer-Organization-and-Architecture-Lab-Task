@@ -1,0 +1,44 @@
+.MODEL SMALL 
+.STACK 100H
+.DATA
+BIN DB 10110000B
+LENGTH DB 30H
+.CODE
+ MAIN PROC
+        
+    MOV AX,@DATA
+    MOV DS,AX
+    MOV AH,2
+    
+CONDITION:
+    MOV DL,BIN
+    MOV BL,LENGTH
+    CMP BL,38H
+    JL PRINTABLE
+    JMP EXIT
+
+PRINTABLE:
+    INC LENGTH
+    MOV DL,BIN    
+    SHL DL,1
+    MOV BIN,DL
+    JC TRUE
+    JNC FALSE
+    
+TRUE:
+    MOV DL,'1'
+    INT 21H
+    JMP CONDITION
+    
+    
+FALSE:
+    MOV DL,'0'
+    INT 21H
+    JMP CONDITION
+    
+EXIT:    
+    MOV AH,4CH
+    INT 21H
+    MAIN ENDP
+END MAIN
+    
